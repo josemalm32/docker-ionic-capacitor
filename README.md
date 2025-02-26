@@ -1,41 +1,54 @@
 # docker-ionic-capacitor
 
-🐳 Docker image for building Ionic apps with Capacitor. 
+🐳 Docker image for building Ionic apps with Capacitor.
 
-## How to use this image
+- Java openjdk
+- Android Tools
+- Gradle
+- node.js
+- Ionic CLI
+- Capacitor CLI
+- Linux Goodies: curl, git, unzip, build-essentials, ...
+- Ruby (rake + bundler)
+- Python
 
-<!-- ### Pull image
+# Usage
 
-Pull from Docker Registry:  
-`docker pull robingenz/ionic-capacitor` -->
+Pull from Docker Registry:
+`docker pull level51/docker-ionic-capacitor`
 
-### Build image
+---
 
-Build from GitHub:  
-```
-docker build -t robingenz/ionic-capacitor github.com/robingenz/docker-ionic-capacitor#main
-```
+See `makefile` for building and pushing to Docker Registry.
 
 Available build arguments:  
 
-- JAVA_VERSION (Default: `17`)
-- NODEJS_VERSION (Default: `20`)
-- ANDROID_SDK_VERSION (Default: `11076708`)
-- ANDROID_BUILD_TOOLS_VERSION (Default: `34.0.0`)
-- ANDROID_PLATFORMS_VERSION (Default: `34`)
-- GRADLE_VERSION (Default: `8.2.1`)
-- IONIC_VERSION (Default: `7.2.0`)
-- CAPACITOR_VERSION (Default: `6.0.0`)
+- JAVA_VERSION
+- NODEJS_VERSION
+- ANDROID_SDK_VERSION
+- ANDROID_BUILD_TOOLS_VERSION
+- ANDROID_PLATFORMS_VERSION
+- GRADLE_VERSION
+- IONIC_VERSION
+- CAPACITOR_VERSION
 
-### Run image
+---
 
-Run the docker image:  
+Run the image:
 ```
-docker run -it robingenz/ionic-capacitor bash
+docker run -it level51/docker-ionic-capacitor bash
 ```
 
-## Questions / Issues
+# Version Table
 
-If you got any questions or problems using the image, please visit my [GitHub Repository](https://github.com/robingenz/docker-ionic-capacitor) and write an issue.
+| Image Version | Java | node.js | Android SDK | Android Build Tools | Android Platforms | Gradle | Ionic | Capacitor |
+|---------------|------|---------|-------------|---------------------|-------------------|--------|-------|-----------|
+| 1             | 21   | 22      | 11076708    | 35.0.0              | 35                | 8.11.1 | 7.2.0 | 7.0.1     |
+
+# Caveats
 
 If build fail on mac m1/m2 with qemu x84_64 error add '"runArgs": ["--platform=linux/amd64"]' to devcontainer.json in vscode.
+
+# Kudos
+
+...to Robin Genz for coming up with the initial version ✨

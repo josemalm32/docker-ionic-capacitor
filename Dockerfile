@@ -1,24 +1,32 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
-LABEL MAINTAINER="Robin Genz <mail@robingenz.dev>"
+# Fork of https://github.com/robingenz/docker-ionic-capacitor - thanks Robin!
+LABEL MAINTAINER="Juian Scheuchenzuber <js@lvl51.de>"
 
-ARG JAVA_VERSION=17
-ARG NODEJS_VERSION=20
+ARG JAVA_VERSION=21
+ARG NODEJS_VERSION=22
+
 # See https://developer.android.com/studio/index.html#command-tools
 ARG ANDROID_SDK_VERSION=11076708
+
 # See https://developer.android.com/tools/releases/build-tools
-ARG ANDROID_BUILD_TOOLS_VERSION=34.0.0
+ARG ANDROID_BUILD_TOOLS_VERSION=35.0.0
+
 # See https://developer.android.com/studio/releases/platforms
-ARG ANDROID_PLATFORMS_VERSION=34
+ARG ANDROID_PLATFORMS_VERSION=35
+
 # See https://gradle.org/releases/
-ARG GRADLE_VERSION=8.2.1
+ARG GRADLE_VERSION=8.11.1
+
 # See https://www.npmjs.com/package/@ionic/cli
 ARG IONIC_VERSION=7.2.0
+
 # See https://www.npmjs.com/package/@capacitor/cli
-ARG CAPACITOR_VERSION=6.0.0
+ARG CAPACITOR_VERSION=7.0.1
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 WORKDIR /tmp
 
@@ -36,6 +44,7 @@ RUN apt-get install -qy \
     unzip \
     p7zip p7zip-full \
     python3 \
+    ruby-full \
     openjdk-${JAVA_VERSION}-jre \
     openjdk-${JAVA_VERSION}-jdk
 
@@ -43,11 +52,18 @@ RUN apt-get install -qy \
 RUN locale-gen en_US.UTF-8 && update-locale
 
 # Install Gradle
-ENV GRADLE_HOME=/opt/gradle
-RUN mkdir $GRADLE_HOME \
-    && curl -sL https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -o gradle-${GRADLE_VERSION}-bin.zip \
-    && unzip -d $GRADLE_HOME gradle-${GRADLE_VERSION}-bin.zip
-ENV PATH=$PATH:/opt/gradle/gradle-${GRADLE_VERSION}/bin
+RUN mkdir -p /opt/gradle \
+    && curl -fsSL https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-all.zip -o gradle.zip \
+    && unzip -d /opt/gradle/ gradle.zip \
+    && mv gradle.zip /opt/gradle/gradle-${GRADLE_VERSION}-all.zip
+
+# Ensure Gradle is executable
+ENV GRADLE_HOME=/opt/gradle/gradle-${GRADLE_VERSION}
+RUN chmod +x ${GRADLE_HOME}/bin/gradle
+
+# Verify installation
+ENV PATH=$PATH:$GRADLE_HOME/bin
+RUN gradle --version
 
 # Install Android SDK tools
 ENV ANDROID_HOME=/opt/android-sdk
@@ -66,7 +82,11 @@ ENV PATH=$PATH:${HOME}/.npm-global/bin
 
 # Install Ionic CLI and Capacitor CLI
 RUN npm install -g @ionic/cli@${IONIC_VERSION} \
-    && npm install -g @capacitor/cli@${CAPACITOR_VERSION}
+    && npm install -g @capacitor/cli@${CAPACITOR_VERSION}Y
+
+# Install gems for fastlane usage
+RUN gem install rake && \
+    gem install bundler
 
 # Clean up
 RUN apt-get autoremove -y \

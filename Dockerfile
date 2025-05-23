@@ -4,7 +4,7 @@ FROM ubuntu:24.04
 LABEL MAINTAINER="Juian Scheuchenzuber <js@lvl51.de>"
 
 ARG JAVA_VERSION=21
-ARG NODEJS_VERSION=22
+ARG NODEJS_VERSION=20
 
 # See https://developer.android.com/studio/index.html#command-tools
 ARG ANDROID_SDK_VERSION=11076708
@@ -19,10 +19,10 @@ ARG ANDROID_PLATFORMS_VERSION=35
 ARG GRADLE_VERSION=8.11.1
 
 # See https://www.npmjs.com/package/@ionic/cli
-ARG IONIC_VERSION=7.2.0
+ARG IONIC_VERSION=7.2.1
 
 # See https://www.npmjs.com/package/@capacitor/cli
-ARG CAPACITOR_VERSION=7.0.1
+ARG CAPACITOR_VERSION=7.2.0
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG=en_US.UTF-8
